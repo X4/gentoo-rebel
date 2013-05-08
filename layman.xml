@@ -3,13 +3,13 @@
 <repositories xmlns="" version="1.0">
 <repo quality="experimental" status="unofficial">
     <name>gentoo-rebel</name>
-<description>Rebel Gentoo Overlay </description>
+<description>Rebel Gentoo Overlay</description>
 <homepage>http://github.com/x4/gentoo-rebel</homepage>
     <owner>
 <email></email>
 <name>X4</name>
     </owner>
-<source type="git">git://github.com/x4/gentoo-rebel.git</source>
+<source type="git">git://github.com:X4/gentoo-rebel.git</source>
     <feed>http://github.com/feeds/x4/commits/gentoo-rebel/master</feed>
 </repo>
 </repositories>
