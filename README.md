@@ -3,10 +3,16 @@ gentoo-rebel
 
 Rebel Gentoo Overlay
 
-# Howto
+## Howto
 
-Just run: layman -o https://raw.github.com/X4/gentoo-rebel/master/layman.xml  -f -a gentoo-rebel
+#### A) Quick & Dirty
 
-Or simply add: https://raw.github.com/X4/gentoo-rebel/master/layman.xml to the overlays section in /etc/layman/layman.cfg and run layman -a gentoo-rebel
+1. Run ```layman -o https://raw.github.com/X4/gentoo-rebel/master/layman.xml  -f -a gentoo-rebel```
 
-You can update the repo easily by running: layman -S
+#### B) Sane and Standard
+
+1. Find the overlays section in ```/etc/layman/layman.cfg```
+2. Add ``` https://raw.github.com/X4/gentoo-rebel/master/layman.xml```
+3. Run ```layman -a gentoo-rebel```
+
+You can update the repo easily by running: ```layman -S```
