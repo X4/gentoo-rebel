@@ -1,7 +1,5 @@
-gentoo-rebel
-============
-
 Rebel Gentoo Overlay
+============
 
 ## Howto
 
