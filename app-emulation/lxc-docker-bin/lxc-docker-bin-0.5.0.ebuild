@@ -22,10 +22,10 @@ RDEPEND="
 	app-emulation/lxc
 	net-firewall/iptables
 	sys-apps/iproute2
-	|| (
-		sys-fs/aufs3
-		sys-kernel/aufs-sources
-	)
+#	|| (
+#		sys-fs/aufs3
+#		sys-kernel/aufs-sources
+#	)
 "
 
 RESTRICT="strip"
