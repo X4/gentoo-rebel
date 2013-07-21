@@ -1,0 +1,3 @@
+[submodule "tianon"]
+	path = .tianon
+	url = https://github.com/tianon/gentoo-overlay.git
