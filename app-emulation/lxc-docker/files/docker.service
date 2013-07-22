@@ -8,8 +8,8 @@ Type=simple
 Nice=5
 ExecStartPre=/bin/sh -c "/bin/mount --make-rprivate /"
 ExecStartPre=/bin/sh -c "/sbin/sysctl -w net.ipv4.ip_forward=1"
-ExecStart=/bin/sh -c "/usr/bin/docker -d -p /run/docker.pid"
-ExecStop=/bin/sh -c "sysctl -w net.ipv4.ip_forward=0"
+ExecStart=/bin/sh -c "/usr/bin/docker -d -p /run/docker.pid -D"
+ExecStop=/bin/sh -c "/sbin/sysctl -w net.ipv4.ip_forward=0"
 TimeoutSec=60
 PrivateTmp=true
 
