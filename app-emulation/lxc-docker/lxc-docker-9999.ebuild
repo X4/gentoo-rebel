@@ -33,7 +33,7 @@ RDEPEND="
 	sys-apps/iproute2
 "
 
-+RESTRICT="strip"
+RESTRICT="strip"
 
 pkg_setup() {
 	CONFIG_CHECK+=" ~NETFILTER_XT_MATCH_ADDRTYPE"
