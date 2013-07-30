@@ -11,7 +11,8 @@ inherit kde4-base mercurial
 DESCRIPTION="Alternate taskbar KDE plasmoid, similar to Windows 7"
 HOMEPAGE="https://bitbucket.org/flupp/smooth-tasks-fork"
 
-EHG_REPO_URI="https://bitbucket.org/flupp/smooth-tasks-fork"
+EHG_REPO_URI="http://bitbucket.org/flupp/smooth-tasks-fork"
+EHG_REVISION="kde-4.8"
 
 LICENSE="GPL-2"
 SLOT="4"
