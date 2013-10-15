@@ -7,7 +7,7 @@ Rebel Gentoo Overlay
 
 1. Run ```layman -o https://raw.github.com/X4/gentoo-rebel/master/layman.xml  -f -a gentoo-rebel```
 
-#### B) Sane and Safe
+#### B) Clean and Safe
 
 1. Just run ```git clone https://gist.github.com/6989788.git /etc/layman/overlays/gentoo-rebel```
 2. Update all repos by running: ```layman -S```
