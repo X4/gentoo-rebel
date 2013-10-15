@@ -26,4 +26,4 @@ Rebel Gentoo Overlay
 1. First run ```layman -d gentoo-rebel```
 2. For B) rm -Rf ```/etc/layman/overlays/gentoo-rebel```
 3. For C) Find the overlays section in ```/etc/layman/layman.cfg```
-  * C) Remove ```https://raw.github.com/X4/gentoo-rebel/master/layman.xml```
+  * Remove ```https://raw.github.com/X4/gentoo-rebel/master/layman.xml```
