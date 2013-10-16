@@ -4,13 +4,14 @@
 
 EAPI=5
 
-KDE_MINIMAL="4.9"
+KDE_MINIMAL="4.8"
 KDE_LINGUAS="de"
 inherit kde4-base
 
-DESCRIPTION="Alternate taskbar KDE plasmoid, similar to Windows 7 – This is evolution of http://kde-look.org/content/show.php/Smooth+Tasks?content=101586 for support new KDE 4.8 API's."
+DESCRIPTION="Alternate taskbar KDE plasmoid, similar to Windows 7
+This is evolution of http://kde-look.org/content/show.php/Smooth+Tasks?content=101586 for support of new KDE 4.8 API's."
 HOMEPAGE="http://kde-look.org/content/show.php/Smooth+Tasks+2?content=148813"
-SRC_URI="http://beonis.fr/smooth-tasksv2013-10-12.tar.gz"
+SRC_URI="http://beonis.fr/${PN}v2013-10-12.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="2"
