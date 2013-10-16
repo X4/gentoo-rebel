@@ -14,7 +14,7 @@ HOMEPAGE="http://kde-look.org/content/show.php/Smooth+Tasks+2?content=148813"
 SRC_URI="http://beonis.fr/${PN}v2013-10-12.tar.gz"
 
 LICENSE="GPL-2"
-SLOT="2"
+SLOT="4"
 KEYWORDS="~amd64 ~x86"
 IUSE="debug"
 
