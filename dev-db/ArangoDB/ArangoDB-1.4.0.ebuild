@@ -33,7 +33,7 @@ pkg_setup() {
 }
 
 src_configure() {
-	econf --localstatedir="${EPREFIX}"/var --disable-all-in-one-v8 --disable-all-in-one-libev --disable-all-in-one-icu || die "configure failed"
+	econf --localstatedir="${EPREFIX}"/var --enable-all-in-one-v8 --enable-all-in-one-libev --enable-all-in-one-icu || die "configure failed"
 }
 
 src_install() {
