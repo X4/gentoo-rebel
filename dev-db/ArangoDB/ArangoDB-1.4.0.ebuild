@@ -18,11 +18,8 @@ LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="amd64"
 
-DEPEND=">=dev-libs/libev-4.04
-		>=dev-lang/v8-3.12.19.15
-		>=sys-libs/readline-6.2_p1
-		>=dev-libs/openssl-1.0.0j
-		>=dev-libs/icu-49.1.2"
+DEPEND=">=sys-libs/readline-6.2_p1
+	>=dev-libs/openssl-1.0.0j"
 RDEPEND="${DEPEND}"
 
 pkg_setup() {
