@@ -50,8 +50,8 @@ pkg_nofetch() {
 
 src_unpack() {
 	default
-	unpack ./${MY_P}.tgz
-	unpack ./icd-registration.tgz
+	unpack "${S}/${MY_P}.tgz"
+	unpack "${S}/icd-registration.tgz"
 }
 
 src_prepare() {
