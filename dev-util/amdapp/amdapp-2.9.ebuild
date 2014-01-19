@@ -43,10 +43,10 @@ RESTRICT="mirror strip"
 
 S="${WORKDIR}/${MY_P}"
 
-pkg_nofetch() {
-	einfo "AMD doesn't provide direct download links. Please download"
-	einfo "${ARCHIVE} from ${HOMEPAGE}"
-}
+#pkg_nofetch() {
+#	einfo "AMD doesn't provide direct download links. Please download"
+#	einfo "${ARCHIVE} from ${HOMEPAGE}"
+#}
 
 src_unpack() {
 	default
