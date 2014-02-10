@@ -77,7 +77,6 @@ src_install() {
 	doins share/icons/hicolor/48x48/apps/${PN}.png
 
 	# install documentation, but no license file
-	dodoc share/doc/${PN}/FAQ.pdf
 	dodoc share/doc/${PN}/Readme.txt
 
 	# install binary
