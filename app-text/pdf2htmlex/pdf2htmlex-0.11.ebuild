@@ -9,6 +9,7 @@ inherit cmake-utils vcs-snapshot
 DESCRIPTION="A PDF to HTML converter"
 HOMEPAGE="http://coolwanglu.github.com/pdf2htmlEX/"
 SRC_URI="https://github.com/coolwanglu/${PN}/tarball/v${PV} -> ${P}.tar.gz"
+RESTRICT="primaryuri"
 
 LICENSE="GPL-2 GPL-3"
 SLOT="0"
