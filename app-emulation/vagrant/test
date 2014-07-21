@@ -1,0 +1,188 @@
+#!/usr/bin/env ruby
+
+# Trap interrupts to quit cleanly. This will be overriden at some point
+# by Vagrant. This is made to catch any interrupts while Vagrant is
+# initializing which have historically resulted in stack traces.
+Signal.trap("INT") { abort }
+
+ENV.delete('GEM_HOME')
+ENV.delete('GEM_PATH')
+
+# Split arguments by "--" if its there, we'll recombine them later
+argv = ARGV.dup
+argv_extra = []
+if idx = argv.index("--")
+  argv_extra = argv.slice(idx+1, argv.length-2)
+  argv = argv.slice(0, idx)
+end
+
+# Fast path the version of Vagrant
+if argv.include?("-v") || argv.include?("--version")
+  require "vagrant/version"
+  puts "Vagrant #{Vagrant::VERSION}"
+  exit 0
+end
+
+# This is kind of hacky, and I'd love to find a better way to do this, but
+# if we're accessing the plugin interface, we want to NOT load plugins
+# for this run, because they can actually interfere with the function
+# of the plugin interface.
+argv.each do |arg|
+  if !arg.start_with?("-")
+    if arg == "plugin"
+      ENV["VAGRANT_NO_PLUGINS"] = "1"
+      ENV["VAGRANT_VAGRANTFILE"] = "plugin_command_#{Time.now.to_i}"
+    end
+
+    if arg == "help"
+      ENV["VAGRANT_VAGRANTFILE"] = "plugin_command_#{Time.now.to_i}"
+    end
+
+    break
+  end
+end
+
+# First, make sure that we're executing using the proper Bundler context
+# with our plugins. If we're not, then load that and reload Vagrant.
+if !ENV["VAGRANT_INTERNAL_BUNDLERIZED"]
+  require "rbconfig"
+  ruby_path = File.join(RbConfig::CONFIG["bindir"], RbConfig::CONFIG["ruby_install_name"])
+  Kernel.exec(
+    ruby_path,
+    File.expand_path("../../lib/vagrant/pre-rubygems.rb", __FILE__),
+    *ARGV)
+  raise "Fatal error: this line should never be reached"
+end
+
+# Set logging level to `debug`. This is done before loading 'vagrant', as it
+# sets up the logging system.
+if argv.include?("--debug")
+  argv.delete("--debug")
+  ENV["VAGRANT_LOG"] = "debug"
+end
+
+# Setup our dependencies by initializing Bundler. If we're using plugins,
+# then also initialize the paths to the plugins.
+require "bundler"
+begin
+  Bundler.setup(:default, :plugins)
+rescue Bundler::GemNotFound
+  $stderr.puts "Bundler, the underlying system used to manage Vagrant plugins,"
+  $stderr.puts "is reporting that a plugin or its dependency can't be found."
+  $stderr.puts "This is usually caused by manual tampering with the 'plugins.json'"
+  $stderr.puts "file in the Vagrant home directory. To fix this error, please"
+  $stderr.puts "remove that file and reinstall all your plugins using `vagrant"
+  $stderr.puts "plugin install`."
+rescue Bundler::VersionConflict => e
+  $stderr.puts "Vagrant experienced a version conflict with some installed plugins!"
+  $stderr.puts "This usually happens if you recently upgraded Vagrant. As part of the"
+  $stderr.puts "upgrade process, some existing plugins are no longer compatible with"
+  $stderr.puts "this version of Vagrant. The recommended way to fix this is to remove"
+  $stderr.puts "your existing plugins and reinstall them one-by-one. To remove all"
+  $stderr.puts "plugins:"
+  $stderr.puts ""
+  $stderr.puts "    rm -r ~/.vagrant.d/plugins.json ~/.vagrant.d/gems"
+  $stderr.puts ""
+  $stderr.puts "The error message is shown below:\n\n"
+  $stderr.puts e.message
+  exit 1
+end
+
+# Stdout/stderr should not buffer output
+$stdout.sync = true
+$stderr.sync = true
+
+env = nil
+begin
+  require 'log4r'
+  require 'vagrant'
+  require 'vagrant/cli'
+  require 'vagrant/util/platform'
+
+  # Create a logger right away
+  logger = Log4r::Logger.new("vagrant::bin::vagrant")
+  logger.info("`vagrant` invoked: #{ARGV.inspect}")
+
+  # These will be the options that are passed to initialze the Vagrant
+  # environment.
+  opts = {}
+
+  # Disable color in a few cases:
+  #
+  #   * --no-color is anywhere in our arguments
+  #   * STDOUT is not a TTY
+  #   * The terminal doesn't support colors (Windows)
+  #
+  if argv.include?("--no-color") || ENV["VAGRANT_NO_COLOR"]
+    # Delete the argument from the list so that it doesn't
+    # cause any invalid arguments down the road.
+    argv.delete("--no-color")
+
+    opts[:ui_class] = Vagrant::UI::Basic
+  elsif !Vagrant::Util::Platform.terminal_supports_colors?
+    opts[:ui_class] = Vagrant::UI::Basic
+  elsif !$stdout.tty? && !Vagrant::Util::Platform.cygwin?
+    # Cygwin always reports STDOUT is not a TTY, so we only disable
+    # colors if its not a TTY AND its not Cygwin.
+    opts[:ui_class] = Vagrant::UI::Basic
+  end
+
+  # Also allow users to force colors.
+  if argv.include?("--color")
+    argv.delete("--color")
+    opts[:ui_class] = Vagrant::UI::Colored
+  end
+
+  # Highest precedence is if we have enabled machine-readable output
+  if argv.include?("--machine-readable")
+    argv.delete("--machine-readable")
+    opts[:ui_class] = Vagrant::UI::MachineReadable
+  end
+
+  # Default to colored output
+  opts[:ui_class] ||= Vagrant::UI::Colored
+
+  # Recombine the arguments
+  argv << "--"
+  argv += argv_extra
+
+  # Create the environment, which is the cwd of wherever the
+  # `vagrant` command was invoked from
+  logger.debug("Creating Vagrant environment")
+  env = Vagrant::Environment.new(opts)
+
+  begin
+    # Execute the CLI interface, and exit with the proper error code
+    exit_status = env.cli(argv)
+  ensure
+    # Unload the environment so cleanup can be done
+    env.unload
+  end
+
+  # Exit with the exit status from our CLI command
+  exit(exit_status)
+rescue Exception => e
+  # It is possible for errors to happen in Vagrant's initialization. In
+  # this case, we don't have access to this class yet, so we check for it.
+  raise if !defined?(Vagrant) || !defined?(Vagrant::Errors)
+  raise if !e.is_a?(Vagrant::Errors::VagrantError)
+
+  require 'log4r'
+  logger = Log4r::Logger.new("vagrant::bin::vagrant")
+  logger.error("Vagrant experienced an error! Details:")
+  logger.error(e.inspect)
+  logger.error(e.message)
+  logger.error(e.backtrace.join("\n"))
+
+  if env
+    opts = { :prefix => false }
+    env.ui.error e.message, opts if e.message
+    env.ui.machine("error-exit", e.class.to_s, e.message.to_s)
+  else
+    $stderr.puts "Vagrant failed to initialize at a very early stage:\n\n"
+    $stderr.puts e.message
+  end
+
+  exit e.status_code if e.respond_to?(:status_code)
+  exit 999 # An error occurred with no status code defined
+end

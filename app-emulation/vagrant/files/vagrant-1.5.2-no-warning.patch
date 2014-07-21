@@ -1,0 +1,14 @@
+--- vagrant-1.5.2/bin/vagrant
++++ vagrant-1.5.2/bin/vagrant
+@@ -151,11 +151,6 @@
+   logger.debug("Creating Vagrant environment")
+   env = Vagrant::Environment.new(opts)
+ 
+-  if !Vagrant.in_installer?
+-    # If we're not in the installer, warn.
+-    env.ui.warn(I18n.t("vagrant.general.not_in_installer") + "\n", prefix: false)
+-  end
+-
+   begin
+     # Execute the CLI interface, and exit with the proper error code
+     exit_status = env.cli(argv)
