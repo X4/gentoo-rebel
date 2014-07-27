@@ -25,16 +25,11 @@ RESTRICT="primaryuri test"
 IUSE="test"
 
 RDEPEND="${RDEPEND}
-	lzo
-	libidn
-	rtmpdump
 	app-arch/libarchive
 	net-misc/curl
 	!x64-macos? ( || ( app-emulation/virtualbox app-emulation/virtualbox-bin ) )"
 
 ruby_add_rdepend "
-	rake
-	>=bundler-1.3
 	>=dev-ruby/childprocess-0.5
 	>=dev-ruby/rspec-2.14
 	>=dev-ruby/thor-0.18.1
