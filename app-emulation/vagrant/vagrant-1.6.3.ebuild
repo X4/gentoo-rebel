@@ -25,11 +25,16 @@ RESTRICT="primaryuri test"
 IUSE="test"
 
 RDEPEND="${RDEPEND}
+	lzo
+	libidn
+	rtmpdump
 	app-arch/libarchive
 	net-misc/curl
 	!x64-macos? ( || ( app-emulation/virtualbox app-emulation/virtualbox-bin ) )"
 
 ruby_add_rdepend "
+	rake
+	>=bundler-1.3
 	>=dev-ruby/childprocess-0.5
 	>=dev-ruby/rspec-2.14
 	>=dev-ruby/thor-0.18.1
@@ -42,13 +47,7 @@ all_ruby_prepare() {
 	sed -i '/[Bb]undler/d' Rakefile || die
 	rm Gemfile || die
 
-	# loosen dependencies
-#	sed -e '/childprocess\|erubis\|log4r\|net-scp/s/~>/>=/' \
-#		-e '/net-ssh/s:, "< 2.8.0"::' \
-#		-i ${PN}.gemspec || die
-#
-	#epatch "${FILESDIR}"/${PN}-1.5.2-no-warning.patch
-	#epatch "${FILESDIR}"/${PN}-1.5.2-rvm.patch
+	epatch "${FILESDIR}"/${PN}-1.6.3-nfs.patch
 }
 
 pkg_postinst() {
