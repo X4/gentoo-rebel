@@ -34,7 +34,6 @@ ruby_add_rdepend "
 	>=dev-ruby/rspec-2.14
 	>=dev-ruby/thor-0.18.1
 	>=dev-ruby/log4r-1.1.9
-	<dev-ruby/log4r-1.1.11
 "
 
 all_ruby_prepare() {
