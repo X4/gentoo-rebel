@@ -3,7 +3,7 @@
 # $Header: /var/cvsroot/gentoo-x86/app-emulation/vagrant/vagrant-1.4.3-r2.ebuild,v 1.2 2014/04/02 16:20:56 vikraman Exp $
 
 EAPI="5"
-USE_RUBY="ruby21"
+USE_RUBY="ruby21 ruby20 ruby19"
 
 RUBY_FAKEGEM_EXTRADOC="CHANGELOG.md README.md"
 RUBY_FAKEGEM_GEMSPEC="vagrant.gemspec"
