@@ -1,0 +1,5 @@
+[Unit]
+Description=USB multiplex daemon for use with Apple iPhone/iPod Touch devices
+
+[Service]
+ExecStart=/usr/sbin/usbmuxd -f -U usbmux

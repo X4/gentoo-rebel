@@ -1,0 +1,30 @@
+diff -Nur usbmuxd-1.0.8.orig/udev/85-usbmuxd.rules.in usbmuxd-1.0.8/udev/85-usbmuxd.rules.in
+--- usbmuxd-1.0.8.orig/udev/85-usbmuxd.rules.in	2012-04-08 01:50:09.000000000 +0300
++++ usbmuxd-1.0.8/udev/85-usbmuxd.rules.in	2012-08-14 16:29:40.947633080 +0300
+@@ -1,7 +1,7 @@
+ # usbmuxd ("Apple Mobile Device" muxer listening on /var/run/usbmuxd)
+ 
+ # Forces iDevices to the last USB configuration and runs usbmuxd
+-ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="05ac", ATTR{idProduct}=="12[9a][0-9a-f]", ENV{USBMUX_SUPPORTED}="1", ATTR{bConfigurationValue}!="$attr{bNumConfigurations}", ATTR{bConfigurationValue}="$attr{bNumConfigurations}", OWNER="usbmux", RUN+="@CMAKE_INSTALL_PREFIX@/sbin/usbmuxd -u -U usbmux"
++ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="05ac", ATTR{idProduct}=="12[9a][0-9a-f]", ENV{USBMUX_SUPPORTED}="1", ATTR{bConfigurationValue}!="$attr{bNumConfigurations}", ATTR{bConfigurationValue}="$attr{bNumConfigurations}", OWNER="usbmux", RUN+="/usr/bin/systemctl start usbmuxd.service"
+ 
+ # Exit usbmuxd when the last device is removed
+-ACTION=="remove", SUBSYSTEM=="usb", ENV{PRODUCT}=="5ac/12[9a][0-9a-f]/*", ENV{INTERFACE}=="255/*", RUN+="@CMAKE_INSTALL_PREFIX@/sbin/usbmuxd -x"
++ACTION=="remove", SUBSYSTEM=="usb", ENV{PRODUCT}=="5ac/12[9a][0-9a-f]/*", ENV{INTERFACE}=="255/*", RUN+="/usr/bin/systemctl stop usbmuxd.service"
+diff -Nur usbmuxd-1.0.8.orig/udev/CMakeLists.txt usbmuxd-1.0.8/udev/CMakeLists.txt
+--- usbmuxd-1.0.8.orig/udev/CMakeLists.txt	2012-08-14 16:24:09.000000000 +0300
++++ usbmuxd-1.0.8/udev/CMakeLists.txt	2012-08-14 16:27:16.737626843 +0300
+@@ -1,2 +1,4 @@
+ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/85-usbmuxd.rules.in ${CMAKE_CURRENT_BINARY_DIR}/85-usbmuxd.rules @ONLY)
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/85-usbmuxd.rules DESTINATION /lib/udev/rules.d/)
++CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/usbmuxd.service.in ${CMAKE_CURRENT_BINARY_DIR}/usbmuxd.service @ONLY)
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/usbmuxd.service DESTINATION /lib/systemd/system/)
+diff -Nur usbmuxd-1.0.8.orig/udev/usbmuxd.service.in usbmuxd-1.0.8/udev/usbmuxd.service.in
+--- usbmuxd-1.0.8.orig/udev/usbmuxd.service.in	1970-01-01 03:00:00.000000000 +0300
++++ usbmuxd-1.0.8/udev/usbmuxd.service.in	2012-08-09 17:26:45.000000000 +0300
+@@ -0,0 +1,5 @@
++[Unit]
++Description=USB multiplex daemon for use with Apple iPhone/iPod Touch devices
++
++[Service]
++ExecStart=@CMAKE_INSTALL_PREFIX@/sbin/usbmuxd -f -U usbmux

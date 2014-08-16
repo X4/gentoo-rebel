@@ -1,0 +1,11 @@
+diff -ur linux-3.7.1.orig/tools/power/x86/turbostat/Makefile linux-3.7.1/tools/power/x86/turbostat/Makefile
+--- Makefile.orig	2012-12-17 21:14:54.000000000 +0200
++++ Makefile	2012-12-18 14:51:38.347304219 +0200
+@@ -5,5 +5,5 @@
+ 	rm -f turbostat
+ 
+ install :
+-	install turbostat /usr/bin/turbostat
+-	install turbostat.8 /usr/share/man/man8
++	install turbostat $(DESTDIR)/usr/sbin/turbostat
++	install turbostat.8 $(DESTDIR)/usr/share/man/man8

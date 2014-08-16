@@ -1,0 +1,30 @@
+--- src/ifuse.c.orig	2012-04-08 21:11:03.000000000 +0300
++++ src/ifuse.c	2013-02-22 11:07:46.996044037 +0200
+@@ -585,6 +585,16 @@
+ 	return -get_afc_error_as_errno(err);
+ }
+ 
++static ifuse_chmod(const char *file, mode_t mode)
++{
++	return 0;
++}
++
++static ifuse_chown(const char *file, uid_t user, gid_t group)
++{
++	return 0;
++}
++
+ static struct fuse_operations ifuse_oper = {
+ 	.getattr = ifuse_getattr,
+ 	.statfs = ifuse_statfs,
+@@ -606,7 +616,9 @@
+ 	.fsync = ifuse_fsync,
+ 	.release = ifuse_release,
+ 	.init = ifuse_init,
+-	.destroy = ifuse_cleanup
++	.destroy = ifuse_cleanup,
++	.chmod = ifuse_chmod,
++	.chown = ifuse_chown
+ };
+ 
+ static void print_usage()
