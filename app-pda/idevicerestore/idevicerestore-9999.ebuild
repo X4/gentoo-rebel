@@ -18,7 +18,7 @@ IUSE=""
 RDEPEND="app-pda/libimobiledevice
          app-pda/libirecovery
          app-pda/usbmuxd
-         app-pda/libplist
+         >=app-pda/libplist-1.12
          dev-libs/libzip
          virtual/libusb"
 DEPEND="dev-util/pkgconfig
