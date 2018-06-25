@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="5"
+EAPI="6"
 
 inherit autotools git-r3
 
@@ -18,12 +18,13 @@ IUSE=""
 RDEPEND="app-pda/libimobiledevice
          app-pda/libirecovery
          app-pda/usbmuxd
-         app-pda/libplist
+         >=app-pda/libplist-1.12
          dev-libs/libzip
          virtual/libusb"
 DEPEND="dev-util/pkgconfig
         ${RDEPEND}"
 
 src_prepare() {
+	default
 	eautoreconf
 }
