@@ -8,7 +8,7 @@ inherit autotools git-r3
 
 DESCRIPTION="iRecovery is a libusb-based commandline utility to talk to iBoot/iBSS in Apple's iPhone/iPod touch via USB"
 HOMEPAGE="https://github.com/libimobiledevice/libirecovery"
-EGIT_REPO_URI="http://github.com/libimobiledevice/libirecovery.git"
+EGIT_REPO_URI="https://github.com/libimobiledevice/libirecovery.git"
 
 LICENSE="GPL-3"
 SLOT="0"
